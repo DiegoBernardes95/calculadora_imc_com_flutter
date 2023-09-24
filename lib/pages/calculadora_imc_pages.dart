@@ -1,5 +1,6 @@
 import 'package:calculadora_imc/model/imc.dart';
 import 'package:calculadora_imc/pages/configuracoes_pages.dart';
+import 'package:calculadora_imc/pages/historico_pages.dart';
 import 'package:calculadora_imc/repository/configuracoes_repository.dart';
 import 'package:calculadora_imc/repository/historico_repository.dart';
 import 'package:calculadora_imc/repository/imc_repository.dart';
@@ -89,6 +90,19 @@ class _CalculadoraImcPagesState extends State<CalculadoraImcPages> {
                       fontSize: 20,
                       color: Colors.white,
                     )),
+                const SizedBox(height: 100),
+                InkWell(
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => const HistoricoPages()));
+                  },
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.read_more, color: Colors.red),
+                      SizedBox(width: 6),
+                      Text("HISTÓRICO", style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold))
+                  ]),
+                )
               ],
             ),
     );
@@ -201,13 +215,12 @@ class _CalculadoraImcPagesState extends State<CalculadoraImcPages> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10)),
                           builder: (BuildContext bc) {
+                            if(usuario.altura != 0 && usuario.peso != 0){
+                              configuracoesRepository.salvarDados(usuario);
+                              HistoricoRepository.salvar(Imc(0, usuario.altura, usuario.peso, usuario.data));
+                            }
                             return modalIMC(); // Esse método retorna todo um widget com todo o conteúdo do modal
                           });
-
-                      if(usuario.altura != 0 && usuario.peso != 0){
-                        configuracoesRepository.salvarDados(usuario);
-                        HistoricoRepository.salvar(Imc(0, usuario.altura, usuario.peso, usuario.data));
-                      }
                       
                       setState(() {
                         // ao fechar o modalBottom, o app será atualizado com enfase no código declarado no escopo do setState, mantendo a altura e peso declarados
